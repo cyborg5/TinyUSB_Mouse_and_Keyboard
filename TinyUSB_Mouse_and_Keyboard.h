@@ -1,21 +1,27 @@
 /*
- * This module simulates the standard Arduino "Keyboard.h" API for use with the
- *  TinyUSB HID API. Instead of doing
+ * This module simulates the standard Arduino "Mouse.h" and
+ * "Keyboard.h" API for use with the TinyUSB HID API. Instead of doing
  *  #include <HID.h>
+ *  #include <Mouse.h>
  *  #include <Keyboard.h>
  *  
  *  Simply do
  *  
- *  #include "TinyUSB_Keyboard.h"
+ *  #include <TinyUSB_Mouse_Keyboard.h>
  *  
  *  and this module will automatically select whether or not to use the
- *  standard Arduino keyboard API or the TinyUSB API.
+ *  standard Arduino mouse and keyboard API or the TinyUSB API. We had to
+ *  combine them into a single library because of the way TinyUSB handles
+ *  descriptors.
  *  
+ *  For details on Arduino Mouse.h see
+ *   https://www.arduino.cc/reference/en/language/functions/usb/mouse/
  *  For details on Arduino Keyboard.h see
  *   https://www.arduino.cc/reference/en/language/functions/usb/keyboard/
- *  
- *  NOTE: This code is derived from the standard Arduino Keyboard.h and Keyboard.cpp
- *    code. The copyright on that original code is as follows.
+ *
+ *  NOTE: This code is derived from the standard Arduino Mouse.h, Mouse.cpp,
+ *    Keyboard.h, and Keyboard.cpp code. The copyright on that original code
+ *    is as follows.
  *   
  *  Copyright (c) 2015, Arduino LLC
  *  Original code (pre-library): Copyright (c) 2011, Peter Barrett
@@ -34,11 +40,52 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#ifndef USE_TINYUSB
+  //if not using TinyUSB then default to the standard Arduino routines.
+  #include <HID.h>
+  #include <Mouse.h>
+  #include <Keyboard.h>
+#else
 
-#ifdef USE_TINYUSB
-  //================================================================================
-  //================================================================================
-  //  Keyboard
+  #include <Arduino.h>
+
+/*****************************
+ *   MOUSE SECTION
+ *****************************/ 
+  #define MOUSE_LEFT 1
+  #define MOUSE_RIGHT 2
+  #define MOUSE_MIDDLE 4
+  #define MOUSE_ALL (MOUSE_LEFT | MOUSE_RIGHT | MOUSE_MIDDLE)
+
+  /*
+   * This class contains the exact same methods as the Arduino Mouse.h class.
+   */
+  class TinyMouse_
+  {
+    private:
+      uint8_t _buttons;
+      void buttons(uint8_t b);
+    public:
+      TinyMouse_(void);
+      void begin(void);
+      void end(void);
+      void click(uint8_t b = MOUSE_LEFT);
+      void move(signed char x, signed char y, signed char wheel = 0); 
+      void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
+      void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
+      bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
+  };
+  
+  extern TinyMouse_ Mouse;
+
+
+
+/******************************
+ *    KEYBOARD SECTION
+ ******************************/
+  //  Keyboard codes
+  //  Note these are different in some respects to the TinyUSB codes but 
+  //  are compatible with Arduino Keyboard.h API
   
   #define KEY_LEFT_CTRL   0x80
   #define KEY_LEFT_SHIFT    0x81
@@ -119,7 +166,4 @@
   
   extern TinyKeyboard_ Keyboard;
 
-#else   //if not using TinyUSB then default to the standard Arduino routines.
-  #include <HID.h>
-  #include <Keyboard.h>
 #endif  

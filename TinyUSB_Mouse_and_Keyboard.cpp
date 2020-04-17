@@ -1,21 +1,27 @@
 /*
- * This module simulates the standard Arduino "Keyboard.h" API for use with the
- *  TinyUSB HID API. Instead of doing
+ * This module simulates the standard Arduino "Mouse.h" and
+ * "Keyboard.h" API for use with the TinyUSB HID API. Instead of doing
  *  #include <HID.h>
+ *  #include <Mouse.h>
  *  #include <Keyboard.h>
  *  
  *  Simply do
  *  
- *  #include "TinyUSB_Keyboard.h"
+ *  #include <TinyUSB_Mouse_Keyboard.h>
  *  
  *  and this module will automatically select whether or not to use the
- *  standard Arduino keyboard API or the TinyUSB API.
+ *  standard Arduino mouse and keyboard API or the TinyUSB API. We had to
+ *  combine them into a single library because of the way TinyUSB handles
+ *  descriptors.
  *  
+ *  For details on Arduino Mouse.h see
+ *   https://www.arduino.cc/reference/en/language/functions/usb/mouse/
  *  For details on Arduino Keyboard.h see
  *   https://www.arduino.cc/reference/en/language/functions/usb/keyboard/
- *  
- *  NOTE: This code is derived from the standard Arduino Keyboard.h and Keyboard.cpp
- *    code. The copyright on that original code is as follows.
+ *
+ *  NOTE: This code is derived from the standard Arduino Mouse.h, Mouse.cpp,
+ *    Keyboard.h, and Keyboard.cpp code. The copyright on that original code
+ *    is as follows.
  *   
  *  Copyright (c) 2015, Arduino LLC
  *  Original code (pre-library): Copyright (c) 2011, Peter Barrett
@@ -34,29 +40,111 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#ifndef USE_TINYUSB
+  //if not using TinyUSB then default to the standard Arduino routines.
+  #include <HID.h>
+  #include <Mouse.h>
+  #include <Keyboard.h>
+#else
 
-#ifdef USE_TINYUSB
-  #include "TinyUSB_Keyboard.h"
+
+/*****************************
+ *   COMMON SECTION
+ *****************************/ 
+
   #include <Adafruit_TinyUSB.h>
+  #include <TinyUSB_Mouse_and_Keyboard.h>
   
-  #define  RID_KEYBOARD 1
+  #define RID_KEYBOARD 1
+  #define RID_MOUSE 2
   
+
   // HID report descriptor using TinyUSB's template
+  // Single Report (no ID) descriptor
   uint8_t const desc_hid_report[] =
   {
-    TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(RID_KEYBOARD), )
+	TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(RID_KEYBOARD), ),
+    TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(RID_MOUSE),)
   };
-  
+
   Adafruit_USBD_HID usb_hid;
   
-  TinyKeyboard_::TinyKeyboard_(void) {
+/*****************************
+ *   MOUSE SECTION
+ *****************************/ 
+
+  TinyMouse_::TinyMouse_(void) {
+  }
+  
+  void TinyMouse_::begin(void) {
+    _buttons = 0;
     usb_hid.setPollInterval(2);
     usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
     usb_hid.begin();
-  };
+    while( !USBDevice.mounted() ) delay(1);
+  }
+
+  void TinyMouse_::move (int8_t x, int8_t y, int8_t wheel) {
+    if ( USBDevice.suspended() )  {
+      USBDevice.remoteWakeup();
+    }
+    while(!usb_hid.ready()) delay(1);
+    usb_hid.mouseReport(RID_MOUSE,_buttons,x,y,wheel,0);
+  }
+  
+  void TinyMouse_::end(void) 
+  {
+  }
+  
+  void TinyMouse_::click(uint8_t b)
+  {
+    _buttons = b;
+    move(0,0,0);
+    _buttons = 0;
+    move(0,0,0);
+  }
+  
+  void TinyMouse_::buttons(uint8_t b)
+  {
+    if (b != _buttons)
+    {
+      _buttons = b;
+      move(0,0,0);
+    }
+  }
+  
+  void TinyMouse_::press(uint8_t b) 
+  {
+    buttons(_buttons | b);
+  }
+  
+  void TinyMouse_::release(uint8_t b)
+  {
+    buttons(_buttons & ~b);
+  }
+  
+  bool TinyMouse_::isPressed(uint8_t b)
+  {
+    if ((b & _buttons) > 0) 
+      return true;
+    return false;
+  }
+  
+  TinyMouse_ Mouse;//create an instance of the Mouse object
+  
+ /*****************************
+ *   KEYBOARD SECTION
+ *****************************/ 
+
+  TinyKeyboard_::TinyKeyboard_(void) {
+  }
   
   void TinyKeyboard_::begin(void)
   {
+    usb_hid.setPollInterval(2);
+    usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
+    usb_hid.begin();
+    while( !USBDevice.mounted() ) delay(1);
   }
   
   void TinyKeyboard_::end(void)
@@ -65,7 +153,7 @@
   
   void TinyKeyboard_::sendReport(KeyReport* keys)
   {
-    if ( USBDevice.sUSBended() )  {
+    if ( USBDevice.suspended() )  {
       USBDevice.remoteWakeup();
     }
     while(!usb_hid.ready()) delay(1);

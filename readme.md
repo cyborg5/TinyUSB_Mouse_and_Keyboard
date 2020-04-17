@@ -1,5 +1,4 @@
-﻿# Problems developed with this code. Do not download yet. It worked yesterday but not today.
-# TinyUSB Mouse and Keyboard libraries 
+﻿# TinyUSB Mouse and Keyboard libraries 
 
 These libraries provide an Arduino Mouse.h and Keyboard.h compatible API for TinyUSB stack mouse and keyboard control.
 
@@ -13,8 +12,14 @@ This module simulates the standard Arduino "Mouse.h" API and Arduino "Keyboard.h
 
 Simply do
 
-    #include <TinyUSB_Mouse.h>
-	#include <TinyUSB_Keyboard.h>
- 
+    #include <TinyUSB_Mouse_and_Keyboard.h>
+	 
 and this module will automatically select whether or not to use the standard Arduino mouse API or the TinyUSB API.
+
+## Redesigned from initial release to be a single library
+
+## Known issues:
+
+ - Intermittent problems using Serial.print() or Serial.println() but it is not always reproducible. We're working on it.
+ 
 

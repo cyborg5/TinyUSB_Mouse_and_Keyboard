@@ -1,10 +1,11 @@
 /*
- * Sample program demonstrating TinyUSB_Mouse.h module which
- * auto selects between standard Arduino Mouse.h API and TinyUSB mouse API
+ * Sample program demonstrating TinyUSB_Mouse_and_Keyboard.h module which
+ * auto selects between standard Arduino Mouse.h API and TinyUSB mouse API.
+ * This program tests the mouse portion alone.
  */
 
 //Include this module whether using Arduino stack or TinyUSB stack
-#include <TinyUSB_Mouse.h>
+#include <TinyUSB_Mouse_and_Keyboard.h>
 
 void Status (void) {  //prints out mouse button status
   Serial.print("Mouse Buttons: Left:"); Serial.print(Mouse.isPressed(MOUSE_LEFT),DEC);
@@ -13,9 +14,9 @@ void Status (void) {  //prints out mouse button status
 }
 
 void setup() {
+  Mouse.begin();  //Unlike Arduino Mouse.h, you must use "begin" method.
   Serial.begin(115200);
   while (! Serial)delay (1);
-  Mouse.begin();  //Like Arduino Mouse.h, neither "begin" nor "end" methods do anything
   Serial.println("USB mouse test");
   Mouse.click(MOUSE_LEFT);delay(1000);  //do a click
   Mouse.move(50,0);delay(1000);         //movie in all four directions
@@ -41,6 +42,7 @@ void setup() {
   Status();
   Mouse.move(-30,-30); delay(1000);     //move slightly to clear the pop-up
   Mouse.click(MOUSE_LEFT);delay(1000);  //clear of the pop-up
+  Serial.println("Test completed");
 };
 void loop() {
 }

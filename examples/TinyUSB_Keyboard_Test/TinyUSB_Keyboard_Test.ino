@@ -1,14 +1,15 @@
 /*
- * Sample program demonstrating TinyUSB_Keyboard.h module which
- * auto selects between standard Arduino Keyboard.h API and TinyUSB mouse API
+ * Sample program demonstrating TinyUSB_Mouse_and_Keyboard.h module which
+ * auto selects between standard Arduino Mouse.h API and TinyUSB mouse API.
+ * This program tests the keyboard portion alone.
  */
 
 //Include this module whether using Arduino stack or TinyUSB stack
-#include <TinyUSB_Keyboard.h>
+#include <TinyUSB_Mouse_and_Keyboard.h>
 
 uint8_t Multiple[3]= {'1','2','3'};
 void setup() {
-  Keyboard.begin();   //Like Arduino Keyboard.h, neither "begin" nor "end" methods do anything
+  Keyboard.begin();   //Unlike Arduino Keyboard.h, you must use begin.
   Serial.begin(115200);
   while (! Serial)delay (1);
   Serial.println("USB keyboard test");
@@ -37,7 +38,7 @@ void loop() {
 /*
  * Click below before uploading and it will type characters in this comment
  * 
- *  
+ * 
  *  
  *  
  *  
