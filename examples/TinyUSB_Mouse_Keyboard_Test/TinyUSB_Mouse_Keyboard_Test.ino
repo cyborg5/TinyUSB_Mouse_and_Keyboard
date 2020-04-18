@@ -8,10 +8,9 @@
 #include <TinyUSB_Mouse_and_Keyboard.h>
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  //Don't really need much Serial output but we wanted to make sure it doesn't interfere
   Keyboard.begin(); //Unlike Arduino Keyboard.h and Mouse.h, 
   Mouse.begin();    //    you must use "begin" method for both mouse and keyboard.
-  //Don't really need much Serial output but we wanted to make sure it doesn't interfere
   Serial.begin(115200); 
   while (! Serial)delay (1);
   Serial.println("USB mouse and keyboard test");
@@ -41,10 +40,6 @@ void setup() {
   Serial.println("Test completed.");
 };
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
 }
 
 /*
