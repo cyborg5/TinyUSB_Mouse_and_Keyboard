@@ -63,8 +63,8 @@
   // Single Report (no ID) descriptor
   uint8_t const desc_hid_report[] =
   {
-	TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(RID_KEYBOARD), ),
-    TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(RID_MOUSE),)
+    TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(RID_KEYBOARD) ),
+    TUD_HID_REPORT_DESC_MOUSE( HID_REPORT_ID(RID_MOUSE) )
   };
 
   Adafruit_USBD_HID usb_hid;
