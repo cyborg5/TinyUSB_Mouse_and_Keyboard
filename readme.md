@@ -1,6 +1,6 @@
-﻿# TinyUSB Mouse and Keyboard libraries 
+﻿# TinyUSB Mouse and Keyboard library
 
-These libraries provide an Arduino Mouse.h and Keyboard.h compatible API for TinyUSB stack mouse and keyboard control.
+This library provides an Arduino Mouse.h and Keyboard.h compatible API for TinyUSB stack mouse and keyboard control.
 
 Copy all files to your "Arduino/libraries". See the "examples" folder for sample sketches.
 
@@ -15,6 +15,9 @@ Simply do
     #include <TinyUSB_Mouse_and_Keyboard.h>
 	 
 and this module will automatically select whether or not to use the standard Arduino mouse API or the TinyUSB API.
+
+Also be sure to check out the companion library "[BLE52_Mouse_and_Keyboard](https://github.com/cyborg5/BLE52_Mouse_and_Keyboard)" which provides a similar interface for using TinyUSB connections.
+
 
 ## Redesigned from initial release to be a single library
 
