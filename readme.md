@@ -16,7 +16,7 @@ Simply do
 	 
 and this module will automatically select whether or not to use the standard Arduino mouse API or the TinyUSB API.
 
-Also be sure to check out the companion library "[BLE52_Mouse_and_Keyboard](https://github.com/cyborg5/BLE52_Mouse_and_Keyboard)" which provides a similar interface for using TinyUSB connections.
+Also be sure to check out the companion library "[BLE52_Mouse_and_Keyboard](https://github.com/cyborg5/BLE52_Mouse_and_Keyboard)" which provides a similar interface for using BLE connections on an nRF52840.
 
 
 ## Redesigned from initial release to be a single library
