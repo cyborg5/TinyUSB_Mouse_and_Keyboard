@@ -4,7 +4,7 @@
  * This program tests the mouse and keyboard portions together.
  */
 
-//Include these modules whether using Arduino stack or TinyUSB stack
+//Include this module whether using Arduino stack or TinyUSB stack
 #include <TinyUSB_Mouse_and_Keyboard.h>
 
 void setup() {
