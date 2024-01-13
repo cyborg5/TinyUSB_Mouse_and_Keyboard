@@ -18,6 +18,12 @@ void setup() {
   Serial.begin(115200);
   while (! Serial)delay (1);
   Serial.println("USB mouse test");
+    #ifndef USE_TINYUSB
+    Serial.println("Using standard Arduino HID.h");
+  #else
+    Serial.println("Using TinyUSB");
+  #endif
+  delay(1000);
   Mouse.click(MOUSE_LEFT);delay(1000);  //do a click
   Mouse.move(50,0);delay(1000);         //movie in all four directions
   Mouse.move(0,50);delay(1000);

@@ -14,6 +14,12 @@ void setup() {
   Serial.begin(115200); 
   while (! Serial)delay (1);
   Serial.println("USB mouse and keyboard test");
+  #ifndef USE_TINYUSB
+    Serial.println("Using standard Arduino HID.h");
+  #else
+    Serial.println("Using TinyUSB");
+  #endif
+  delay(2000);
   Keyboard.println("The first line of text");   //write some text
   Keyboard.println("The second line of text");
   Serial.println("Wrote some text.");

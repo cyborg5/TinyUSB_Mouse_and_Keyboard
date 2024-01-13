@@ -13,6 +13,11 @@ void setup() {
   Serial.begin(115200);
   while (! Serial)delay (1);
   Serial.println("USB keyboard test");
+  #ifndef USE_TINYUSB
+    Serial.println("Using standard Arduino HID.h");
+  #else
+    Serial.println("Using TinyUSB");
+  #endif
   Keyboard.write('a');            //press and release 'a' key
   Keyboard.write(Multiple,3);     //multiple keys sequentially from a buffer
   Keyboard.print("456");          //print a string
@@ -26,7 +31,7 @@ void setup() {
   Keyboard.releaseAll();          //release all
   Keyboard.println("1234");       //not shifted
   Keyboard.print("A mistake");  //will attempt to erase this
-  delay(1000);
+  delay(2000);
   Keyboard.press(KEY_LEFT_CTRL);  //will attempt control-z
   Keyboard.write('z');
   Keyboard.releaseAll();         //release the control key

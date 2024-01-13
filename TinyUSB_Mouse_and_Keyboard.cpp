@@ -81,12 +81,12 @@
     usb_hid.setPollInterval(2);
     usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
     usb_hid.begin();
-    while( !USBDevice.mounted() ) delay(1);
+    while( !TinyUSBDevice.mounted() ) delay(1);
   }
 
   void TinyMouse_::move (int8_t x, int8_t y, int8_t wheel) {
-    if ( USBDevice.suspended() )  {
-      USBDevice.remoteWakeup();
+    if ( TinyUSBDevice.suspended() )  {
+      TinyUSBDevice.remoteWakeup();
     }
     while(!usb_hid.ready()) delay(1);
     usb_hid.mouseReport(RID_MOUSE,_buttons,x,y,wheel,0);
@@ -144,7 +144,7 @@
     usb_hid.setPollInterval(2);
     usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
     usb_hid.begin();
-    while( !USBDevice.mounted() ) delay(1);
+    while( !TinyUSBDevice.mounted() ) delay(1);
   }
   
   void TinyKeyboard_::end(void)
@@ -153,8 +153,8 @@
   
   void TinyKeyboard_::sendReport(KeyReport* keys)
   {
-    if ( USBDevice.suspended() )  {
-      USBDevice.remoteWakeup();
+    if ( TinyUSBDevice.suspended() )  {
+      TinyUSBDevice.remoteWakeup();
     }
     while(!usb_hid.ready()) delay(1);
     usb_hid.keyboardReport(RID_KEYBOARD,keys->modifiers,keys->keys);

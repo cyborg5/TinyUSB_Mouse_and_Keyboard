@@ -1,6 +1,10 @@
 #  TinyUSB Mouse and Keyboard Library Changelog
 
-## 0.1.2 - 20 20.04.26
+## 0.1.3 - 2024.01.11
+
+- Renamed USBDevice to TinyUSBDevice because Adafruit renamed it
+
+## 0.1.2 - 2020.04.26
 
 - Merged PR #1
 
